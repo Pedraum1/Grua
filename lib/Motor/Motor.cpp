@@ -9,37 +9,46 @@ Motor::Motor(){
     // Construtor da classe Motor
 
     // Inicializa os atributos do motor
-    ligado = false;
-    velocidade = 0;
-    sentido = true;
+    this->ligado = false;
+    this->velocidade = 0;
+    this->sentido = true;
     // true = sentido horario
     // false = sentido anti-horario
 
-    pino_positivo = -1;
-    pino_negativo = -1;
+    this->pino_positivo = -1;
+    this->pino_negativo = -1;
+    this->pino_pwm = -1;
 
 }
 
 void Motor::atribuir(int pino1, int pino2, int pino3){
     // Atribui os pinos de controle do motor
-    pino_positivo = pino1;
-    pino_negativo = pino2;
-    pino_pwm = pino3;
+    this->pino_positivo = pino1;
+    this->pino_negativo = pino2;
+    this->pino_pwm = pino3;
+
+    if(!this->verificarPinos()){
+        this->pino_positivo = pino1;
+        this->pino_negativo = pino2;
+        this->pino_pwm = pino3;
+
+        return;
+    }
 
     // Configura os pinos como saída
-    pinMode(pino_pwm, OUTPUT);
-    pinMode(pino_positivo, OUTPUT);
-    pinMode(pino_negativo, OUTPUT);
+    pinMode(this->pino_pwm, OUTPUT);
+    pinMode(this->pino_positivo, OUTPUT);
+    pinMode(this->pino_negativo, OUTPUT);
 }
 
 // FUNÇÕES DE CONTROLE DO MOTOR
 
 void Motor::ligar(){
-    if(this->ligado){
+    if(!this->verificarPinos()){
         return;
     }
 
-    if(!this->verificarPinos()){
+    if(this->ligado){
         return;
     }
 
@@ -51,22 +60,25 @@ void Motor::ligar(){
 }
 
 void Motor::desligar(){
+    if(!this->verificarPinos()){
+        return;
+    }
     
     if(!this->ligado){
         return;
     }
 
-    if(!this->verificarPinos()){
-        return;
-    }
-
     // Desligando o motor
     this->ligado = false;
-    digitalWrite(pino_positivo, LOW);
-    digitalWrite(pino_negativo, LOW);
+    digitalWrite(this->pino_positivo, LOW);
+    digitalWrite(this->pino_negativo, LOW);
 }
 
 void Motor::ajustarVelocidade(int velocidade){
+    if(!this->verificarPinos()){
+        return; // Pinos inválidos
+    }
+
     if(velocidade < 0 || velocidade > 255){
         return; // Velocidade inválida
     }
@@ -74,7 +86,7 @@ void Motor::ajustarVelocidade(int velocidade){
 
     if(this->ligado){
         // Se o motor estiver ligado, ajusta a velocidade
-        analogWrite(pino_pwm, this->velocidade);
+        analogWrite(this->pino_pwm, this->velocidade);
     }
 }
 
@@ -94,8 +106,8 @@ void Motor::ajustarSentido(bool sentido){
             digitalWrite(pino_negativo, LOW);
         } else {
             // Se o sentido for anti-horario, ativa o pino negativo
-            digitalWrite(pino_positivo, LOW);
-            digitalWrite(pino_negativo, HIGH);
+            digitalWrite(this->pino_positivo, LOW);
+            digitalWrite(this->pino_negativo, HIGH);
         }
     }
 }
@@ -104,6 +116,7 @@ void Motor::trocarSentido(){
     if(!this->verificarPinos()){
         return; // Pinos inválidos
     }
+    
     // Troca o sentido do motor
     this->sentido = !this->sentido; // Inverte o sentido
     this->ajustarSentido(this->sentido); // Ajusta o sentido
@@ -114,11 +127,13 @@ void Motor::trocarSentido(){
 bool Motor::verificarPinos(){
     // Verifica se os pinos foram atribuídos corretamente
 
-    if(pino_positivo == -1 || pino_negativo == -1){
+    if(this->pino_positivo == -1 || this->pino_negativo == -1 || this->pino_pwm == -1){
         return false; // Pinos não atribuídos
     }
 
-    if(pino_positivo == pino_negativo){
+    if(this->pino_positivo == this->pino_negativo ||
+       this->pino_positivo == this->pino_pwm ||
+       this->pino_negativo == this->pino_pwm){
         return false; // Pinos iguais
     }
 
