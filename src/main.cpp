@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Motor.h"
+#include <Motor.h>
 
 Motor motor;
 
@@ -15,6 +15,6 @@ void loop() {
 
   motor.desligar(); // Desliga o motor
   delay(2000); // Espera 2 segundos antes de repetir
-  
+
   motor.trocarSentido(); // Troca o sentido do motor
 }
