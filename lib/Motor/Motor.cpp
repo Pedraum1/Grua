@@ -64,6 +64,7 @@ void Motor::desligar(){
     this->ligado = false;
     digitalWrite(this->pino_positivo, LOW);
     digitalWrite(this->pino_negativo, LOW);
+    analogWrite(this->pino_pwm, 0); // Desliga o PWM
 }
 
 void Motor::ajustarVelocidade(int velocidade){
@@ -90,8 +91,8 @@ void Motor::ajustarSentido(bool sentido){
         // Se o motor estiver ligado, troca o sentido
         if(this->sentido){
             // Se o sentido for horario, ativa o pino positivo
-            digitalWrite(pino_positivo, HIGH);
             digitalWrite(pino_negativo, LOW);
+            digitalWrite(pino_positivo, HIGH);
         } else {
             // Se o sentido for anti-horario, ativa o pino negativo
             digitalWrite(this->pino_positivo, LOW);
