@@ -108,6 +108,18 @@ void Motor::trocarSentido(){
     this->ajustarSentido(this->sentido); // Ajusta o sentido
 }
 
+int Motor::velocidadeAtual(){
+    // Retorna a velocidade atual do motor
+    if(!this->verificarPinos()) return -1;
+    return this->velocidade;
+}
+
+bool Motor::estaLigado(){
+    // Retorna se o motor está ligado ou não
+    if(!this->verificarPinos()) return false;
+    return this->ligado;
+}
+
 //=========================PRIVADAS===============================
 
 bool Motor::verificarPinos(){
