@@ -1,20 +1,52 @@
 #include <Arduino.h>
 #include <Motor.h>
+#include <Botao.h>
+
+Botao botao_aumenta(2);
+Botao botao_diminui(3);
+Botao botao_mestre(4);
 
 Motor motor;
 
+void aumentarVelocidade();
+void reduzirVelocidade();
+
 void setup() {
-  motor.atribuir(6, 7, 10);   // Pinos do motor do cabo
+  motor.atribuir(6, 7, 10);
+  motor.ajustarVelocidade(48);
 }
 
 void loop() {
-  motor.ligar();
+    if(botao_mestre.clicado()){
+      motor.estaLigado() ? motor.desligar() : motor.ligar();
+      // Alterna o estado do motor entre ligado e desligado
+    }
 
-  motor.ajustarVelocidade(128); // Ajusta a velocidade do motor
-  delay(2000); // Mantém o motor ligado por 2 segundos
+    if(botao_aumenta.ler()){
+      aumentarVelocidade();
+    }
 
-  motor.desligar(); // Desliga o motor
-  delay(2000); // Espera 2 segundos antes de repetir
+    if(botao_diminui.ler()){
+      reduzirVelocidade();
+    }
+}
 
-  motor.trocarSentido(); // Troca o sentido do motor
+void aumentarVelocidade() {
+  int velocidadeAtual = motor.velocidadeAtual();
+
+  velocidadeAtual++;
+  if (velocidadeAtual > LIMITE_SUPERIOR_PWM) {
+    velocidadeAtual = LIMITE_SUPERIOR_PWM; // Limite superior
+  }
+  motor.ajustarVelocidade(velocidadeAtual);
+}
+
+void reduzirVelocidade() {
+  int velocidadeAtual = motor.velocidadeAtual();
+
+  velocidadeAtual--;
+  if (velocidadeAtual < LIMITE_INFERIOR_PWM) {
+    velocidadeAtual = LIMITE_INFERIOR_PWM; // Limite inferior
+  }
+  motor.ajustarVelocidade(velocidadeAtual);
 }
