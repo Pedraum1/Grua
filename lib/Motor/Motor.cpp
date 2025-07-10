@@ -46,9 +46,7 @@ void Motor::atribuir(int pino1, int pino2, int pino3){
 void Motor::ligar(){
     if(!this->verificarPinos()) return;
 
-    if(this->ligado){
-        return;
-    }
+    if(this->ligado) return;
 
     // Ligando o motor
     this->ligado = true;
@@ -60,9 +58,7 @@ void Motor::ligar(){
 void Motor::desligar(){
     if(!this->verificarPinos()) return;
     
-    if(!this->ligado){
-        return;
-    }
+    if(!this->ligado) return;
 
     // Desligando o motor
     this->ligado = false;
