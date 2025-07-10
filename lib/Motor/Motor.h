@@ -1,6 +1,9 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
+#define LIMITE_INFERIOR_PWM 48
+#define LIMITE_SUPERIOR_PWM 255
+
 #include <Arduino.h>
 
 class Motor {

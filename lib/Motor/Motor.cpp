@@ -69,7 +69,7 @@ void Motor::desligar(){
 void Motor::ajustarVelocidade(int velocidade){
     if(!this->verificarPinos()) return;
 
-    if(velocidade < 0 || velocidade > 255){
+    if(velocidade < LIMITE_INFERIOR_PWM || velocidade > LIMITE_SUPERIOR_PWM){
         return; // Velocidade inválida
     }
     this->velocidade = velocidade;
