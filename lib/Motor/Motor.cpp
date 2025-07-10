@@ -44,9 +44,7 @@ void Motor::atribuir(int pino1, int pino2, int pino3){
 // FUNÇÕES DE CONTROLE DO MOTOR
 
 void Motor::ligar(){
-    if(!this->verificarPinos()){
-        return;
-    }
+    if(!this->verificarPinos()) return;
 
     if(this->ligado){
         return;
@@ -60,9 +58,7 @@ void Motor::ligar(){
 }
 
 void Motor::desligar(){
-    if(!this->verificarPinos()){
-        return;
-    }
+    if(!this->verificarPinos()) return;
     
     if(!this->ligado){
         return;
@@ -75,9 +71,7 @@ void Motor::desligar(){
 }
 
 void Motor::ajustarVelocidade(int velocidade){
-    if(!this->verificarPinos()){
-        return; // Pinos inválidos
-    }
+    if(!this->verificarPinos()) return;
 
     if(velocidade < 0 || velocidade > 255){
         return; // Velocidade inválida
@@ -92,9 +86,7 @@ void Motor::ajustarVelocidade(int velocidade){
 
 void Motor::ajustarSentido(bool sentido){
     
-    if(!this->verificarPinos()){
-        return; // Pinos inválidos
-    }
+    if(!this->verificarPinos()) return;
 
     this->sentido = sentido;
 
@@ -113,9 +105,7 @@ void Motor::ajustarSentido(bool sentido){
 }
 
 void Motor::trocarSentido(){
-    if(!this->verificarPinos()){
-        return; // Pinos inválidos
-    }
+    if(!this->verificarPinos()) return;
     
     // Troca o sentido do motor
     this->sentido = !this->sentido; // Inverte o sentido
