@@ -22,31 +22,11 @@ void loop() {
       // Alterna o estado do motor entre ligado e desligado
     }
 
-    if(botao_aumenta.ler()){
-      aumentarVelocidade();
+    if(botao_aumenta.clicado()){
+      motor.ajustarSentido(true);
     }
 
-    if(botao_diminui.ler()){
-      reduzirVelocidade();
+    if(botao_diminui.clicado()){
+      motor.ajustarSentido(false);
     }
-}
-
-void aumentarVelocidade() {
-  int velocidadeAtual = motor.velocidadeAtual();
-
-  velocidadeAtual++;
-  if (velocidadeAtual > LIMITE_SUPERIOR_PWM) {
-    velocidadeAtual = LIMITE_SUPERIOR_PWM; // Limite superior
-  }
-  motor.ajustarVelocidade(velocidadeAtual);
-}
-
-void reduzirVelocidade() {
-  int velocidadeAtual = motor.velocidadeAtual();
-
-  velocidadeAtual--;
-  if (velocidadeAtual < LIMITE_INFERIOR_PWM) {
-    velocidadeAtual = LIMITE_INFERIOR_PWM; // Limite inferior
-  }
-  motor.ajustarVelocidade(velocidadeAtual);
 }
