@@ -121,6 +121,11 @@ bool Motor::estaLigado(){
     return this->ligado;
 }
 
+bool Motor::sentidoAtual(){
+    // Retorna o sentido atual do motor
+    return this->sentido; // true = sentido horario, false = sentido anti-horario
+}
+
 //=========================PRIVADAS===============================
 
 bool Motor::verificarPinos(){

@@ -16,6 +16,7 @@ class Motor {
         void ajustarSentido(bool sentido);
         void trocarSentido();
         int velocidadeAtual();
+        bool sentidoAtual();
 
         bool estaLigado();
     
