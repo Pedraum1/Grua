@@ -4,41 +4,42 @@
 
 Botao botao_aumenta(2);
 Botao botao_diminui(3);
-Botao botao_reset(4);
+Botao botao_mestre(4);
 
 Motor motor;
 
 void setup() {
   motor.atribuir(6, 7, 10);
   motor.ajustarVelocidade(48);
+  motor.ajustarSentido(HORARIO);
 }
 
 void loop() {
 
-    if(botao_aumenta.clicado()){
-      if(!motor.sentidoAtual()){  //se o motor estiver girando no sentido anti-horário
-
-        if(motor.estaLigado()) motor.desligar(); //desliga o motor        
-        motor.trocarSentido();    //troca o sentido do motor para horário
-        //aguarda que o operador clique novamente no botão para ligar o motor
-      } else {
-        if(!motor.estaLigado()) motor.ligar(); //liga o motor
-      }
+  if(botao_aumenta.clicado()){
+    if(motor.sentidoAtual() == PARADO){
+      motor.ajustarSentido(HORARIO);
     }
-
-    if(botao_diminui.clicado()){
-      if(motor.sentidoAtual()){  //se o motor estiver girando no sentido horário
-
-        if(motor.estaLigado()) motor.desligar(); //desliga o motor        
-        motor.trocarSentido();    //troca o sentido do motor para anti-horário
-        //aguarda que o operador clique novamente no botão para ligar o motor
-      } else {
-        if(!motor.estaLigado()) motor.ligar(); //liga o motor
-      }
+    if(motor.sentidoAtual() == ANTI_HORARIO){
+      motor.ajustarSentido(PARADO);
     }
+  }
 
-    if(botao_reset.clicado()){
+  if(botao_diminui.clicado()){
+    if(motor.sentidoAtual() == PARADO){
+      motor.ajustarSentido(ANTI_HORARIO);
+    }
+    if(motor.sentidoAtual() == HORARIO){
+      motor.ajustarSentido(PARADO);
+    }
+  }
+
+  if(botao_mestre.clicado()){
+    if(motor.estaLigado()){
       motor.desligar();
+    } else {
+      motor.ligar();
     }
+  }
 
 }

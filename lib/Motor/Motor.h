@@ -6,6 +6,12 @@
 
 #include <Arduino.h>
 
+typedef enum {
+    ANTI_HORARIO = -1,
+    PARADO = 0,
+    HORARIO = 1
+} Direcao;
+
 class Motor {
     public:
         Motor();
@@ -13,17 +19,18 @@ class Motor {
         void ligar();
         void desligar();
         void ajustarVelocidade(int velocidade);
-        void ajustarSentido(bool sentido);
+        void ajustarSentido(Direcao sentido);
         void trocarSentido();
         int velocidadeAtual();
-        bool sentidoAtual();
+        Direcao sentidoAtual();
 
         bool estaLigado();
     
     private:
         bool ligado;
         int velocidade;
-        bool sentido;
+        Direcao sentido;
+
         int pino_positivo;
         int pino_negativo;
         int pino_pwm;

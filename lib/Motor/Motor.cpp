@@ -11,9 +11,7 @@ Motor::Motor(){
     // Inicializa os atributos do motor
     this->ligado = false;
     this->velocidade = 0;
-    this->sentido = true;
-    // true = sentido horario
-    // false = sentido anti-horario
+    this->sentido = PARADO;
 
     this->pino_positivo = -1;
     this->pino_negativo = -1;
@@ -60,10 +58,10 @@ void Motor::desligar(){
     
     if(!this->ligado) return;
 
+    this->ajustarSentido(PARADO); // Para o motor antes de desligar
     // Desligando o motor
     this->ligado = false;
-    digitalWrite(this->pino_positivo, LOW);
-    digitalWrite(this->pino_negativo, LOW);
+
     analogWrite(this->pino_pwm, 0); // Desliga o PWM
 }
 
@@ -73,40 +71,54 @@ void Motor::ajustarVelocidade(int velocidade){
     if(velocidade < LIMITE_INFERIOR_PWM || velocidade > LIMITE_SUPERIOR_PWM){
         return; // Velocidade inválida
     }
-    this->velocidade = velocidade;
 
-    if(this->ligado){
-        // Se o motor estiver ligado, ajusta a velocidade
-        analogWrite(this->pino_pwm, this->velocidade);
-    }
+    this->velocidade = velocidade;
+    analogWrite(this->pino_pwm, this->velocidade);
+
 }
 
-void Motor::ajustarSentido(bool sentido){
-    
+void Motor::ajustarSentido(Direcao sentido){
+    // Ajusta o sentido do motor
+
     if(!this->verificarPinos()) return;
+
+    if(!this->estaLigado()) return;
 
     this->sentido = sentido;
 
-    if(this->ligado){
-        // Se o motor estiver ligado, troca o sentido
-        if(this->sentido){
-            // Se o sentido for horario, ativa o pino positivo
-            digitalWrite(pino_negativo, LOW);
-            digitalWrite(pino_positivo, HIGH);
-        } else {
-            // Se o sentido for anti-horario, ativa o pino negativo
-            digitalWrite(this->pino_positivo, LOW);
-            digitalWrite(this->pino_negativo, HIGH);
-        }
+    if(this->sentido == PARADO){        
+        digitalWrite(this->pino_negativo, LOW);
+        digitalWrite(this->pino_positivo, LOW);
+        return;
     }
+
+    if(this->sentido == HORARIO){
+        digitalWrite(this->pino_negativo, LOW);
+        digitalWrite(this->pino_positivo, HIGH);        
+    } else {
+        digitalWrite(this->pino_positivo, LOW);
+        digitalWrite(this->pino_negativo, HIGH);
+    }
+
 }
 
 void Motor::trocarSentido(){
-    if(!this->verificarPinos()) return;
-    
     // Troca o sentido do motor
-    this->sentido = !this->sentido; // Inverte o sentido
-    this->ajustarSentido(this->sentido); // Ajusta o sentido
+
+    if(!this->verificarPinos()) return;
+
+    if(!this->estaLigado()) return;
+
+    if(this->sentido == PARADO){
+        // Se o motor estiver parado, não troca o sentido
+        return;
+    }
+
+    if(this->sentido == HORARIO){
+        this->ajustarSentido(ANTI_HORARIO);
+    } else {
+        this->ajustarSentido(HORARIO);
+    }
 }
 
 int Motor::velocidadeAtual(){
@@ -121,9 +133,9 @@ bool Motor::estaLigado(){
     return this->ligado;
 }
 
-bool Motor::sentidoAtual(){
+Direcao Motor::sentidoAtual(){
     // Retorna o sentido atual do motor
-    return this->sentido; // true = sentido horario, false = sentido anti-horario
+    return this->sentido;
 }
 
 //=========================PRIVADAS===============================
