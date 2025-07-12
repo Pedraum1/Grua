@@ -10,6 +10,7 @@ Botao::Botao(int pino) {
     // Inicializa os estados do botão
     this->estado = false;
     this->ultimoEstado = false;
+    this->debounce = 50;
 }
 
 bool Botao::ler() {
@@ -18,17 +19,24 @@ bool Botao::ler() {
 }
 
 bool Botao::clicado() {
+    unsigned long tempoAtual = millis();
 
     //Se o botão foi pressionado e o último estado era liberado
     if(this->ler() && !this->ultimoEstado) {
-        this->estado = true;        // Botão pressionado
-        this->ultimoEstado = true;  // Atualiza o último estado para pressionado
+        if(tempoAtual - this->ultimoDebounce > this->debounce){
+            this->estado = true;
+            this->ultimoEstado = true;
+            this->ultimoDebounce = tempoAtual;
+        }
     }
 
     //Se o botão foi solto e o último estado era travado
     if (!this->ler() && this->ultimoEstado ){
-        this->ultimoEstado = false; // Botão liberado
-        return true;                // Retorna verdadeiro se o ciclo (clique) foi feito
+        if(tempoAtual - this->ultimoDebounce > this->debounce){
+            this->ultimoEstado = false; // Botão liberado
+            this->ultimoDebounce = tempoAtual; // Atualiza o tempo do último debounce
+            return true;    // Retorna verdadeiro se o ciclo (clique) foi feito
+        }
     }
 
     return false; // Retorna falso se o botão não foi clicado
