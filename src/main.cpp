@@ -24,6 +24,10 @@ void setup() {
 void loop() {
 
   if(botao_aumenta.clicado()){
+    if(!motor.estaLigado()){
+      return; // Não faz nada se o motor não estiver ligado
+    }
+
     if(motor.sentidoAtual() == PARADO){
       motor.ajustarSentido(HORARIO);
       Serial.println("Girando motor no sentido horário.");
@@ -35,6 +39,10 @@ void loop() {
   }
 
   if(botao_diminui.clicado()){
+    if(!motor.estaLigado()){
+      return; // Não faz nada se o motor não estiver ligado
+    }
+    
     if(motor.sentidoAtual() == PARADO){
       motor.ajustarSentido(ANTI_HORARIO);
       Serial.println("Girando motor no sentido anti-horário.");
