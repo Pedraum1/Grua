@@ -1,23 +1,14 @@
 #include <Arduino.h>
 #include <Motor.h>
 #include <Botao.h>
-#include <Potenciometro.h>
 
 Botao botao_1_cabo(2);
 Botao botao_2_cabo(3);
 Botao botao_1_trolley(4);
 Botao botao_2_trolley(5);
 
-Potenciometro potenciometro_cabo(A0); // Pino do potenciômetro do cabo
-Potenciometro potenciometro_trolley(A1); // Pino do potenciômetro do carrinho
-
 Motor motor_trolley;
 Motor motor_cabo;
-
-float colherVelocidade() {
-  return potenciometro_cabo.mapear(48, 230);
-  return potenciometro_trolley.mapear(48, 230);
-}
 
 void setup() {
 
@@ -30,8 +21,8 @@ void setup() {
   motor_cabo.atribuir(6, 7, 10);
   motor_trolley.atribuir(8, 9, 11);
 
-  motor_cabo.ajustarVelocidade(colherVelocidade());
-  motor_trolley.ajustarVelocidade(colherVelocidade());
+  motor_cabo.ajustarVelocidade(48);
+  motor_trolley.ajustarVelocidade(48);
 
   motor_cabo.ajustarSentido(HORARIO);
   motor_trolley.ajustarSentido(HORARIO);
@@ -41,15 +32,6 @@ void setup() {
 }
 
 void loop() {
-
-  //================VELOCIDADE================
-
-  if(motor_cabo.estaLigado()){
-    motor_cabo.ajustarVelocidade(colherVelocidade());
-  }
-  if(motor_trolley.estaLigado()){
-    motor_trolley.ajustarVelocidade(colherVelocidade());
-  }
 
   //================CABO================
 
